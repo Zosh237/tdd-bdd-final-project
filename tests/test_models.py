@@ -104,32 +104,70 @@ class TestProductModel(unittest.TestCase):
     #
     # ADD YOUR TEST CASES HERE
     #
-        def test_read_a_product(self):
-            """It should return the details of a product"""
-            product = ProductFactory()
-            logging.logger.debug(f"{product} for debugging purpose")
-            product.id = None
+    def test_read_a_product(self):
+        """It should return the details of a product"""
+        logger = logging.getLogger(__name__)
+        product = ProductFactory()
+        logger.debug(f"{product} for debugging purpose")
+        product.id = None
+        product.create()
+        self.assertIsNotNone(product.id)
+        found_product = Product.find(product.id)
+        self.assertEqual(found_product.id, product.id)
+        self.assertEqual(found_product.name, product.name)
+        self.assertEqual(found_product.description, product.description)
+        self.assertEqual(found_product.price, product.price)
+
+
+    def test_update_a_product(self):
+        """It should modify the value of a product"""
+        logger = logging.getLogger(__name__)
+        product = ProductFactory()
+        logger.debug(f"{product} for debug****")
+        product.id = None
+        product.create()
+        self.assertIsNotNone(product.id)
+        logger.debug(f"{product} form****")
+        product.description = "Nouvelle description"
+        original_id = product.id
+        product.update()
+        self.assertEqual(product.id, original_id)
+    
+    def test_delete_a_product(self):
+        """It should remove a product from database"""
+        logger=logging.getLogger(__name__)
+        product = ProductFactory()
+        product.create()
+        logger.debug(f"{product} info")
+        self.assertEqual(len(Product.all()), 1)
+        product.delete()
+        self.assertEqual(len(Product.all()), 0)
+
+    def test_list_all_products(self):
+        """It should return the list all products"""
+        products = Product.all()
+        self.assertEqual(len(products), 0)
+
+        for i in range(0,5) :
+            product=ProductFactory()
             product.create()
-            self.assertIsNotNone(product.id)
-            found_product = Product.find(product.id)
-            self.assertEqual(found_product.id, product.id)
-            self.assertEqual(found_product.name, product.name)
-            self.assertEqual(found_product.description, product.description)
-            self.assertEqual(found_product.price, product.price)
+        products = Product.all()
+        self.assertEqual(len(products), 5)
 
-
-        def test_update_a_product(self):
-            """It should modify the value of a prodcut"""
+    def test_find_a_product_by_name(self):
+        """Return a product by name """
+        logger = logging.getLogger(__name__)
+        for _ in range(5):
             product = ProductFactory()
-            logging.logger.debug(f"{prodcut} for debug")
-            product.id = None
             product.create()
-            self.assertIsNotNone(product.id)
-            logging.logger.debug(f"{product}")
-            product.description = "Nouvelle description"
-            original_id = product.id
-            product.update()
-            self.assertEqual(product.id, original.id)
-            
+        products = Product.all()
+        logger.debug(f"FORME DE OBJET PRODUIT :{products} ")
+        gitname = products[0].name
+        logger.debug(f"NOM DU PREMIER PRODUIT :{first_product_name} ")
 
-            
+        count = len([product for product in products if product.name == first_product_name])
+
+        logger.debug(f'******* {count} , {first_product_name}')
+        products_with_specified_name = Product.find_by_name(first_product_name) 
+        self.assertEqual(count, products_with_specified_name.count())
+        self.assertEqual(first_product_name, products_with_specified_name['name'])
