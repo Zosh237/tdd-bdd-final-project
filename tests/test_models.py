@@ -162,12 +162,44 @@ class TestProductModel(unittest.TestCase):
             product.create()
         products = Product.all()
         logger.debug(f"FORME DE OBJET PRODUIT :{products} ")
-        gitname = products[0].name
+        first_product_name = products[0].name
         logger.debug(f"NOM DU PREMIER PRODUIT :{first_product_name} ")
 
         count = len([product for product in products if product.name == first_product_name])
 
-        logger.debug(f'******* {count} , {first_product_name}')
+        
         products_with_specified_name = Product.find_by_name(first_product_name) 
+        #logger.debug(f'******* {count} , {first_product_name} , {products_with_specified_name} ****')
+
         self.assertEqual(count, products_with_specified_name.count())
-        self.assertEqual(first_product_name, products_with_specified_name['name'])
+        for product in products_with_specified_name:
+            self.assertEqual(product.name, first_product_name )
+
+    def test_find_a_product_by_availability(self):
+        """Find product by availability """
+        logger = logging.getLogger(__name__)
+        products = ProductFactory.create_batch(10)
+        for product in products:
+            product.create()
+        products = Product.all()
+        isFirstProdAvailable = products[0].available
+        count = len([product for product in products if product.available == isFirstProdAvailable ])
+        found = Product.find_by_availability(isFirstProdAvailable)
+        self.assertEqual(count, found.count())
+
+        for product in found:
+            self.assertEqual(product.available, isFirstProdAvailable)
+    
+    def test_find_a_product_by_category(self):
+        """Find product by category """
+        logger = logging.getLogger(__name__)
+        products = ProductFactory.create_batch(10)
+        for product in products:
+            product.create()
+        products = Product.all()
+        category = products[0].category
+        count = len([product for product in products if product.category == category])
+        found = Product.find_by_category(category)
+        self.assertEqual(count, found.count())
+        for product in found:
+            self.assertEqual(product.category, category)
