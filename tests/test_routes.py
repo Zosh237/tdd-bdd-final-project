@@ -178,7 +178,6 @@ class TestProductRoutes(TestCase):
         data = response.get_json()
         self.assertEqual(data['name'], test_product.name)
 
-
     ######################################################################
     # Utility functions
     ######################################################################

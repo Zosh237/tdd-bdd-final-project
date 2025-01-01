@@ -169,7 +169,6 @@ class TestProductModel(unittest.TestCase):
 
         
         products_with_specified_name = Product.find_by_name(first_product_name) 
-        #logger.debug(f'******* {count} , {first_product_name} , {products_with_specified_name} ****')
 
         self.assertEqual(count, products_with_specified_name.count())
         for product in products_with_specified_name:
