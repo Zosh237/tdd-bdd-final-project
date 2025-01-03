@@ -85,12 +85,14 @@ def create_products():
     app.logger.info("Product with new id [%s] saved!", product.id)
 
     message = product.serialize()
+    if message is None:
+        return 'Une erreur est survenue', status.HTTP_400_BAD_REQUEST
 
     #
     # Uncomment this line of code once you implement READ A PRODUCT
     #
-    # location_url = url_for("get_products", product_id=product.id, _external=True)
-    location_url = "/"  # delete once READ is implemented
+    location_url = url_for("get_products", product_id=product.id, _external=True)
+    #location_url = "/"  # delete once READ is implemented
     return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
 
 
@@ -105,18 +107,31 @@ def create_products():
 ######################################################################
 # R E A D   A   P R O D U C T
 ######################################################################
-
-#
-# PLACE YOUR CODE HERE TO READ A PRODUCT
-#
+@app.route('/products/<int:product_id>', methods=["GET"] )
+def get_products(product_id):
+    found = Product.find(product_id)
+    if found is None:
+        abort(404, f"Le produit avec l'id = {product_id} n'existe pas")
+    return found.serialize(), status.HTTP_200_OK
 
 ######################################################################
 # U P D A T E   A   P R O D U C T
 ######################################################################
+@app.route('/products/<int:product_id>', methods=["PUT"])
+def updated_product(product_id):
+    payload = request.get_json()
 
-#
-# PLACE YOUR CODE TO UPDATE A PRODUCT HERE
-#
+    product = Product.find(product_id)
+
+    if product is None:
+        abort(404, f"Le produit n'existe pas")
+    if payload is None:
+        abort(404, f"La payload est vide")
+    
+    product.deserialize(payload)
+
+    return product.serialize(), status.HTTP_200_OK
+
 
 ######################################################################
 # D E L E T E   A   P R O D U C T

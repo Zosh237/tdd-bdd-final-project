@@ -124,7 +124,9 @@ class TestProductRoutes(TestCase):
 
         # Check the data is correct
         new_product = response.get_json()
-        self.assertEqual(new_product["name"], test_product.name)
+        logging.debug(f"{new_product} **********")
+        self.assertEqual(new_product['name'], test_product.name)
+        #self.assertEqual(new_product["name"], test_product.name)
         self.assertEqual(new_product["description"], test_product.description)
         self.assertEqual(Decimal(new_product["price"]), test_product.price)
         self.assertEqual(new_product["available"], test_product.available)
