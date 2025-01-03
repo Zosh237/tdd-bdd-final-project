@@ -98,11 +98,27 @@ def create_products():
 ######################################################################
 # L I S T   A L L   P R O D U C T S
 ######################################################################
+#@app.route('/products', methods=['GET'])
+#def get_product_list():
+#    products = Product.all()
+#    products = [product.serialize() for product in products ]
+#    return products, status.HTTP_200_OK
+
+######################################################################
+# L I S T  P R O D U C T S  B Y  N A M E 
+######################################################################
 @app.route('/products', methods=['GET'])
-def get_product_list():
-    products = Product.all()
-    products = [product.serialize() for product in products ]
-    return products, status.HTTP_200_OK
+def query_by_name():
+    "Retourne la liste des produits en les filtrant par nom"
+    products = []
+    name = request.args.get('name')
+    if name:
+        products = Product.find_by_name(name)
+    else:
+        products = Product.all()
+    
+    results = [product.serialize() for product in products]
+    return (results, status.HTTP_200_OK)
 
 ######################################################################
 # R E A D   A   P R O D U C T
@@ -141,4 +157,4 @@ def delete_product(product_id):
     if product_to_delete is None:
         abort(404, "Le produit existe pas")
     product_to_delete.delete()
-    return "", status.HTTP_204_NO_CONTENT
+    return " ", status.HTTP_204_NO_CONTENT
