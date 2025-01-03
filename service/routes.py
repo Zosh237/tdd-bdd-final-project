@@ -135,3 +135,10 @@ def updated_product(product_id):
 ######################################################################
 # D E L E T E   A   P R O D U C T
 ######################################################################
+@app.route('/products/<int:product_id>', methods=['DELETE'])
+def delete_product(product_id):
+    product_to_delete = Product.find(product_id)
+    if product_to_delete is None:
+        abort(404, "Le produit existe pas")
+    product_to_delete.delete()
+    return "", status.HTTP_204_NO_CONTENT
