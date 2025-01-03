@@ -105,20 +105,31 @@ def create_products():
 #    return products, status.HTTP_200_OK
 
 ######################################################################
-# L I S T  P R O D U C T S  B Y  N A M E 
+# L I S T  P R O D U C T S  B Y  N A M E  A N D  B Y  A V A I L A B I L I T Y
 ######################################################################
 @app.route('/products', methods=['GET'])
 def query_by_name():
     "Retourne la liste des produits en les filtrant par nom"
     products = []
     name = request.args.get('name')
+    availability = request.args.get('available')
+    category = request.args.get('category')
+
+
     if name:
         products = Product.find_by_name(name)
+    elif availability:
+        available_value = availability.lower() in ['true',"yes","1"]
+        products = Product.find_by_availability(available_value)
+    elif category:
+        category_value = getattr(Category, category.upper())
+        products = Product.find_by_category(category_value)
     else:
         products = Product.all()
     
     results = [product.serialize() for product in products]
     return (results, status.HTTP_200_OK)
+
 
 ######################################################################
 # R E A D   A   P R O D U C T
