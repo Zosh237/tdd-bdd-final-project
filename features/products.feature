@@ -38,3 +38,26 @@ Scenario: Create a Product
     And I should see "True" in the "Available" dropdown
     And I should see "Tools" in the "Category" dropdown
     And I should see "34.95" in the "Price" field
+
+Scenario: Read a Product
+    when I visit the "Homme Page"
+    And I set the 'Name' to "Hat"
+    And I click on the "Search" button
+    Then I should see the message "Success"
+    when I copy the 'Id' field
+    And I click the "clear" button
+    And I paste the "Id" field
+    And I click the "Retrieve" button
+    Then I should see the message "Success"
+    And I should see "Hat" in the "Name" field
+    And I should see "A red fedora" in the "Description" field
+    And I Should see "True" in the "Available" dropdown
+    And I should see "Cloths" in the "Category" dropdown
+    And I should see "59.95" in the "Price" field
+
+Scenario: Update a Product
+Scenario: Delete a Product
+Scenario: List all products
+Scenario: Search for Products by Category
+Scenario: Search for Products by Availability
+Scenario: Search for Products by Name
