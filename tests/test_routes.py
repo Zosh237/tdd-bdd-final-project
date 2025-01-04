@@ -33,7 +33,7 @@ from service.common import status
 from service.models import db, init_db, Product
 from tests.factories import ProductFactory
 from urllib.parse import quote_plus
-
+from service.models import DataValidationError
 
 
 # Disable all but critical errors during normal test run
@@ -202,6 +202,15 @@ class TestProductRoutes(TestCase):
         updated_product = response.get_json()
         self.assertEqual(updated_product["description"], "unknown")
     
+    def test_update_with_empty_id(self):
+        with self.assertRaises(DataValidationError) as context:
+            product = ProductFactory()
+            product.create()
+            product.id = ""
+            product.update()
+        self.assertEqual(str(context.exception), 'Update called with empty ID field')
+
+
     def test_get_product_list(self):
         """It should Get a list of Products"""
         self._create_products(5)
