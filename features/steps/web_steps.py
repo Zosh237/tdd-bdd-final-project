@@ -132,3 +132,83 @@ def step_impl(context, element_name, text_string):
     )
     element.clear()
     element.send_keys(text_string)
+
+
+################ O T H E R S   S T E P S ###############################################
+
+@when('I press the "{button}" button')
+def step_impl(context, button):
+    button_id = button.lower() + '-btn'
+    context.driver.find_element_by_id(By.ID, button_id).click()
+
+@then(u'I should see "{name}" in the results')
+def step_impl(context, name):
+    found = WebDriverWait(context.driver, context.wait_seconds).until(
+        expected_conditions.text_to_be_present_in_element(
+            (By.ID, 'search_results'),
+        )
+    )
+    assert(found)
+
+@then('I should not see "{name}" in the results')
+def step_impl(context, name):
+    element = context.driver.find_element_by_id(By.ID, 'search_results')
+    assert(name not in element.text)
+
+
+
+@then(u'I should see the message "Success"')
+def step_impl(context):
+    raise NotImplementedError(u'STEP: Then I should see the message "Success"')
+
+
+
+
+
+
+
+
+@when(u'I visit the "Homme Page"')
+def step_impl(context):
+    raise NotImplementedError(u'STEP: When I visit the "Homme Page"')
+
+
+@when(u'I set the \'Name\' to "Hat"')
+def step_impl(context):
+    raise NotImplementedError(u'STEP: When I set the \'Name\' to "Hat"')
+
+
+@when(u'I click on the "Search" button')
+def step_impl(context):
+    raise NotImplementedError(u'STEP: When I click on the "Search" button')
+
+
+@when(u'I copy the \'Id\' field')
+def step_impl(context):
+    raise NotImplementedError(u'STEP: When I copy the \'Id\' field')
+
+
+@when(u'I click the "clear" button')
+def step_impl(context):
+    raise NotImplementedError(u'STEP: When I click the "clear" button')
+
+
+@when(u'I click the "Retrieve" button')
+def step_impl(context):
+    raise NotImplementedError(u'STEP: When I click the "Retrieve" button')
+
+
+       
+        )
+    )
+
+
+
+
+
+
+
+@then(u'I should see the message "Product has been Deleted!"')
+def step_impl(context):
+    raise NotImplementedError(u'STEP: Then I should see the message "Product has been Deleted!"')
+
