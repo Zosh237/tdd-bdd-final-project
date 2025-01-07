@@ -40,14 +40,14 @@ Scenario: Create a Product
     And I should see "34.95" in the "Price" field
 
 Scenario: Read a Product
-    when I visit the "Homme Page"
+    when I visit the "Home Page"
     And I set the 'Name' to "Hat"
     And I click on the "Search" button
     Then I should see the message "Success"
     when I copy the 'Id' field
-    And I click the "clear" button
+    And I click on the "clear" button
     And I paste the "Id" field
-    And I click the "Retrieve" button
+    And I click on the "Retrieve" button
     Then I should see the message "Success"
     And I should see "Hat" in the "Name" field
     And I should see "A red fedora" in the "Description" field

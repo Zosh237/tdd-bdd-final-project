@@ -145,15 +145,13 @@ def step_impl(context, button):
 def step_impl(context, name):
     found = WebDriverWait(context.driver, context.wait_seconds).until(
         expected_conditions.text_to_be_present_in_element(
-            (By.ID, 'search_results'),
-            name
-        )
+            (By.ID, 'search_results'), name)
     )
     assert(found)
 
 @then('I should not see "{name}" in the results')
 def step_impl(context, name):
-    element = context.driver.find_element_by_id(By.ID, 'search_results')
+    element = context.driver.find_element_by_id('search_results')
     assert(name not in element.text)
 
 
@@ -162,36 +160,23 @@ def step_impl(context, message_text):
     element = context.driver.find_element_by_id('flash_message')
     assert(message_text in element.text)
 
+@when(u'I set the \'Name\' to "{name_value}"')
+def step_impl(context, name_value):
+    element_id = "product_name"
+    element = context.driver.find_element_by_id(element_id)
+    element.clear()
+    element.send_keys(name_value)
 
+@when('I click on the "{button}" button')
+def step_impl(context, button):
+    button_id = button.lower() + '-btn'
+    context.driver.find_element_by_id(button_id).click()
 
-
-@when(u'I visit the "Homme Page"')
-def step_impl(context):
-    raise NotImplementedError(u'STEP: When I visit the "Homme Page"')
-
-
-@when(u'I set the \'Name\' to "Hat"')
-def step_impl(context):
-    raise NotImplementedError(u'STEP: When I set the \'Name\' to "Hat"')
-
-
-@when(u'I click on the "Search" button')
-def step_impl(context):
-    raise NotImplementedError(u'STEP: When I click on the "Search" button')
-
-
-@when(u'I copy the \'Id\' field')
-def step_impl(context):
-    raise NotImplementedError(u'STEP: When I copy the \'Id\' field')
-
-
-@when(u'I click the "clear" button')
-def step_impl(context):
-    raise NotImplementedError(u'STEP: When I click the "clear" button')
-
-
-@when(u'I click the "Retrieve" button')
-def step_impl(context):
-    raise NotImplementedError(u'STEP: When I click the "Retrieve" button')
-
-
+@when(u'I copy the \'{element_name}\' field')
+def step_impl(context, element_name):
+    element_id = ID_PREFIX + element_name.lower().replace(' ', '_')
+    element = WebDriverWait(context.driver, context.wait_seconds).until(
+        expected_conditions.presence_of_element_located((By.ID, element_id))
+    )
+    context.clipboard = element.get_attribute('value')
+    logging.info('Clipboard contains: %s', context.clipboard) 
